@@ -8,22 +8,20 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import com.example.demo.handler.GreetingHandler;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 
 @Configuration(proxyBeanMethods = false)
 public class GreatingRouter {
+
     @Bean
     public RouterFunction<ServerResponse> route(GreetingHandler greetingHandler) {
-
         return RouterFunctions
-                .route(RequestPredicates.GET("/hello").and(accept(MediaType.APPLICATION_JSON)), greetingHandler::hello)
-                .andRoute(RequestPredicates.GET("/"), greetingHandler::home)
-                .andRoute(RequestPredicates.GET("users"), greetingHandler::getClients)
-                .andRoute(RequestPredicates.GET("/transactions"), greetingHandler::getTransaction)
-                .andRoute(RequestPredicates.GET("/books"), greetingHandler::getBooks);
-
-
-
+                .route(GET("/hello").and(accept(MediaType.APPLICATION_JSON)), greetingHandler::hello)
+                .andRoute(GET("/"), greetingHandler::home)
+                .andRoute(GET("/users"), greetingHandler::getClients)
+                .andRoute(GET("/books"), greetingHandler::getBooks)
+                .andRoute(GET("/transactions"), greetingHandler::getTransactions)
+                .andRoute(POST("/books").and(accept(MediaType.APPLICATION_JSON)), greetingHandler::createBook)
+                .andRoute(POST("/transactions").and(accept(MediaType.APPLICATION_JSON)), greetingHandler::createTransaction);
     }
-
 }
